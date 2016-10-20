@@ -30,10 +30,10 @@ App {
   }
 
   // load data if not available and device goes online
-  onIsOnlineChanged: {
-    if(!DataModel.loaded && isOnline)
-      loadDataTimer.start() // use timer to delay load as immediate calls might not get through (network not ready yet)
-  }
+//  onIsOnlineChanged: {
+//    if(!DataModel.loaded && isOnline)
+//      loadDataTimer.start() // use timer to delay load as immediate calls might not get through (network not ready yet)
+//  }
 
   // timer to load data after 1 second delay when going online
   Timer {
@@ -124,7 +124,7 @@ App {
     // automatically load data if not loaded and data-intense page is opened
     onCurrentIndexChanged: {
       if(currentIndex > 0 && currentIndex < 3) {
-        if(!DataModel.loaded && isOnline)
+        if(!DataModel.loaded/* && isOnline*/)
           DataModel.loadData()
       }
     }

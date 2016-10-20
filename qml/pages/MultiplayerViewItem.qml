@@ -20,8 +20,8 @@ Item {
     tintColor: Theme.tintColor
 
     // deactivate loading of icon font and use theme icon font instead
-    iconFontSource: ""
-    iconFontName: Theme.iconFont.name
+    //iconFontSource: ""
+    //iconFontName: Theme.iconFont.name
 
     onBackClicked: page.backClicked()
     Component.onCompleted: multiplayerView.show(page.state)
