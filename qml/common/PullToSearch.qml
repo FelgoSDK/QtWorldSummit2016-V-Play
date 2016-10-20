@@ -5,8 +5,8 @@ import QtQuick 2.0
 Item {
   id: pts
   width: parent.width
-  height: textField.height
-  implicitHeight: textField.height
+  height: searchRow.height + dp(Theme.navigationBar.defaultBarItemPadding)
+  implicitHeight: searchRow.height + dp(Theme.navigationBar.defaultBarItemPadding)
 
   property ListView target
   property bool pullEnabled: visible
@@ -19,38 +19,62 @@ Item {
   signal accepted(string text)
   signal editingFinished(string text)
 
-  // background
-  Rectangle {
+  MouseArea {
     anchors.fill: parent
-    color: Theme.backgroundColor
+    onClicked: {
+      if(!textField.focus) textField.focus = true
+    }
   }
 
-  // search field
-  Row {
-    x: spacing
-    width: parent.width - x
-    height: textField.height
-    spacing: Theme.navigationBar.defaultBarItemPadding
+  // background
+  Rectangle {
+    width: parent.width
+    height: parent.height + dp(2)
+    anchors.bottom: parent.bottom
+    color: Theme.isIos ? "#c9c9ce" : "#fff" //Theme.backgroundColor
+  }
 
-    Icon {
-      id: icon
-      icon: IconType.search
-      anchors.verticalCenter: parent.verticalCenter
-      color: textField.activeFocus ? Theme.tintColor : Theme.secondaryTextColor
-    }
+  Rectangle {
+    anchors.centerIn: parent
+    width: parent.width - dp(Theme.navigationBar.defaultBarItemPadding)*2
+    height: searchRow.height
+    color: "#fff"
+    radius: dp(7)
 
-    AppTextField {
-      id: textField
-      width: parent.width - parent.spacing - icon.width
-      anchors.verticalCenter: parent.verticalCenter
-      showClearButton: true
-      onEditingFinished: {
-        textField.focus = false
-        pts.editingFinished(textField.text)
+    // search field
+    Row {
+      id: searchRow
+      width: parent.width - dp(Theme.navigationBar.defaultBarItemPadding)*2
+      anchors.horizontalCenter: parent.horizontalCenter
+      height: textField.height
+      spacing: dp(10) //Theme.navigationBar.defaultBarItemPadding
+
+      Icon {
+        id: icon
+        icon: IconType.search
+        anchors.verticalCenter: parent.verticalCenter
+        color: textField.activeFocus ? Theme.tintColor : Theme.secondaryTextColor
       }
-      onAccepted: {
-        textField.focus = false
-        pts.accepted(textField.text)
+
+      AppTextField {
+        id: textField
+        width: parent.width - parent.spacing - icon.width
+        anchors.verticalCenter: parent.verticalCenter
+        showClearButton: true
+        backgroundColor: "transparent"
+        borderWidth: 1
+        borderColor: "transparent"
+        inputMethodHints: Qt.ImhNoPredictiveText
+        placeholderText: "Search"
+        placeholderColor: Theme.secondaryTextColor
+        onEditingFinished: {
+          textField.focus = false
+          pts.editingFinished(textField.text)
+        }
+        onAccepted: {
+          textField.focus = false
+          pts.accepted(textField.text)
+        }
       }
     }
   }
