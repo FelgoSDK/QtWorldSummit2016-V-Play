@@ -37,8 +37,8 @@ Page {
           text: Theme.isAndroid ? modelData.weekday.substring(0, 3) : modelData.weekday
           font.bold: Theme.tabBar.fontBold
           font.capitalization: Theme.tabBar.fontCapitalization
-          font.pixelSize: sp(Theme.tabBar.textSize)
-          color: parent.selected ? Theme.tabBar.titleColor : Theme.tabBar.titleOffColor
+          font.pixelSize: Theme.isIos ? sp(12) : sp(Theme.tabBar.textSize)
+          color: Theme.isIos ? parent.selected ? "#fff" : Theme.tintColor : parent.selected ? Theme.tabBar.titleColor : Theme.tabBar.titleOffColor
         }
       } // AppTabButton
 
