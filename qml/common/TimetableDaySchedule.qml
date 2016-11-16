@@ -129,15 +129,14 @@ Item {
     width: parent.width
     height: parent.height - y
     model: scheduleData ? listView.prepareArraySections(scheduleData) : []
-    cacheBuffer: 2048 // allows to cache delegate items to fill up whole listview for invisible area at top and bottom
+    cacheBuffer: 10000 // allows to cache delegate items to fill up whole listview for invisible area at top and bottom
 
-    // search header for listview (we use PullToSearch for the UI, but set it to always be visible and not only after pulling down!)
-    header: PullToSearch {
+    // search header for listview
+    header: SearchBar {
       visible: searchAllowed
-      pullEnabled: false // do not enable pull-to-search we always show it on top
       height: searchAllowed ? implicitHeight : 0
-      target: listView
       onAccepted: searchAccepted(text)
+      iosAlternateStyle: true
     }
 
     // provide index of first and last visible item
@@ -215,13 +214,7 @@ Item {
 
   // getEventDateTime - build JS date object for event
   function getEventDateTime(event) {
-    var time = event.start
-    var hours = time.substring(0,2)
-    var minutes = time.substring(3,5)
-
-    var date = new Date(event.day)
-    date.setHours(hours)
-    date.setMinutes(minutes)
+    var date = new Date(event.day+"T"+event.start+".000-0700")
     return date
   }
 

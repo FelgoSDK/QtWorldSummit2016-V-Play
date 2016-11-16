@@ -15,7 +15,7 @@ NotificationBar {
 
   // colors of notification bar
   property color tintColor: "#f05352" // default value, will be set to VPlayMultiplayerView::tintColor when used by VPlayMultiplayer
-  property color backgroundColor: Qt.rgba(tintColor.r, tintColor.g, tintColor.b, 0.5)
+  property color backgroundColor: Qt.rgba(tintColor.r, tintColor.g, tintColor.b, 0.75)
   property color textColor: "white"
 
   // content of last received notification

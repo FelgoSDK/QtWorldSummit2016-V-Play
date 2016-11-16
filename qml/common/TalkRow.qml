@@ -7,7 +7,7 @@ Rectangle {
   id: container
   width: parent.width
   height: isListItem ? talkRow.height + dp(Theme.navigationBar.defaultBarItemPadding) : talkRow.height
-  color: isListItem ? "#fff" : "transparent"
+  color: isListItem ? Theme.listItem.backgroundColor : "transparent"
 
   signal clicked
   signal favoriteClicked
@@ -120,7 +120,7 @@ Rectangle {
                 fixedPosition: true
                 centerAnimation: true
                 touchPoint: Qt.point(trackIcon.width * 0.5, trackIcon.height)
-                enabled: false //!isListItem
+                enabled: !isListItem
                 onClicked: container.trackClicked(trackText.text)
               }
             }
@@ -214,7 +214,7 @@ Rectangle {
           Layout.preferredWidth: implicitWidth
           Layout.alignment: Qt.AlignVCenter
           icon: IconType.mapmarker
-          color: _.iconColor
+          color: Theme.tintColor
           visible: roomTxt.visible
         }
 
@@ -223,7 +223,7 @@ Rectangle {
           Layout.fillWidth: true
           Layout.alignment: Qt.AlignVCenter
           wrapMode: Text.WordWrap
-          text: talk.room
+          text: "Show " + talk.room
           color: isListItem ? _.iconColor : Theme.tintColor
           visible: talk.room.length > 0
 
@@ -251,7 +251,7 @@ Rectangle {
           Icon {
             id: favoriteIcon
             icon: isFavorite ? IconType.star : IconType.staro
-            color: isFavorite || favoriteArea.pressed ? Theme.tintColor : _.iconColor
+            color: Theme.tintColor//isFavorite || favoriteArea.pressed ? Theme.tintColor : _.iconColor
             anchors.verticalCenter: parent.verticalCenter
           }
 
@@ -278,6 +278,84 @@ Rectangle {
             anchors.centerIn: parent
             //onClicked: detailPage.toggleFavorite()
             onClicked: container.favoriteClicked()
+          }
+        }
+
+        // website
+        Item {
+          Layout.columnSpan: 2
+          Layout.minimumWidth: webIcon.implicitWidth + talkRow.spacing + _.favoriteTxtWidth
+          Layout.fillWidth: true
+          Layout.preferredHeight: Math.max(webIcon.height, webTxt.height)
+          visible: !small
+
+          Icon {
+            id: webIcon
+            icon: IconType.globe
+            color: Theme.tintColor
+            anchors.verticalCenter: parent.verticalCenter
+          }
+
+          AppText {
+            id: webTxt
+            width: _.favoriteTxtWidth
+            anchors.left: webIcon.right
+            anchors.leftMargin: talkRow.spacing
+            anchors.right: parent.right
+            wrapMode: Text.WordWrap
+            text: "Open in Browser"
+            color: Theme.tintColor
+            anchors.verticalCenter: parent.verticalCenter
+          }
+
+          RippleMouseArea {
+            enabled: !small
+            width: parent.width
+            height: parent.height * 2
+            fixedPosition: true
+            centerAnimation: true
+            touchPoint: Qt.point(webIcon.width * 0.5, webIcon.height)
+            anchors.centerIn: parent
+            onClicked: nativeUtils.openUrl("http://www.qtworldsummit.com/sessions/"+talk.slug)
+          }
+        }
+
+        // share
+        Item {
+          Layout.columnSpan: 2
+          Layout.minimumWidth: shareIcon.implicitWidth + talkRow.spacing + _.favoriteTxtWidth
+          Layout.fillWidth: true
+          Layout.preferredHeight: Math.max(shareIcon.height, shareTxt.height)
+          visible: !small
+
+          Icon {
+            id: shareIcon
+            icon: IconType.share
+            color: Theme.tintColor
+            anchors.verticalCenter: parent.verticalCenter
+          }
+
+          AppText {
+            id: shareTxt
+            width: _.favoriteTxtWidth
+            anchors.left: shareIcon.right
+            anchors.leftMargin: talkRow.spacing
+            anchors.right: parent.right
+            wrapMode: Text.WordWrap
+            text: "Share this Session"
+            color: Theme.tintColor
+            anchors.verticalCenter: parent.verticalCenter
+          }
+
+          RippleMouseArea {
+            enabled: !small
+            width: parent.width
+            height: parent.height * 2
+            fixedPosition: true
+            centerAnimation: true
+            touchPoint: Qt.point(shareIcon.width * 0.5, shareIcon.height)
+            anchors.centerIn: parent
+            onClicked: nativeUtils.share("I am attending \"" + talk.title + "\" at Qt World Summit 2016!","http://www.qtworldsummit.com/sessions/"+talk.slug)
           }
         }
       } // icon grid

@@ -7,7 +7,6 @@ ListPage {
   title: "More"
 
   model: [
-    { text: "Speakers", section: "General", page: Qt.resolvedUrl("SpeakersPage.qml") },
     { text: "Tracks", section: "General", page: Qt.resolvedUrl("TracksPage.qml") },
     { text: "Venue", section: "General", page: Qt.resolvedUrl("VenuePage.qml") },
     { text: "Settings", section: "General", page: Qt.resolvedUrl("SettingsPage.qml") },
@@ -22,14 +21,14 @@ ListPage {
   // TODO index is not ideal here, my speakers page already broke that shiat
   // open configured page when clicked
   onItemSelected: {
-    if(index === 0 || index === 1 || index === 2 || index === 3)
+    if(index === 0 || index === 1 || index === 2)
       morePage.navigationStack.popAllExceptFirstAndPush(model[index].page)
     else {
       var properties = { targetState: model[index].state }
-      if(index === 4 || index === 5) {
+      if(index === 3 || index === 4) {
         properties["targetItem"] = gameNetworkViewItem
       }
-      else if(index === 6 || index === 7) {
+      else if(index === 5 || index === 6) {
         properties["targetItem"] = multiplayerViewItem
       }
       morePage.navigationStack.popAllExceptFirstAndPush(dummyPageComponent, properties)

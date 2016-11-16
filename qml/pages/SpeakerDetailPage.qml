@@ -20,12 +20,10 @@ Page {
     property int loadingCount: 0
   }
 
-  Flickable {
+  AppFlickable {
     anchors.fill: parent
     contentWidth: width
     contentHeight: contentCol.height
-    flickableDirection: Flickable.VerticalFlick
-    clip: true
 
     Column {
       id: contentCol
@@ -77,7 +75,7 @@ Page {
       Rectangle {
         width: parent.width
         height: idNote.height
-        color: Theme.isIos ? Theme.secondaryBackgroundColor : "#fff"
+        color: Theme.isIos ? Theme.secondaryBackgroundColor : Theme.backgroundColor
 
         Column {
           id: idNote
@@ -86,7 +84,7 @@ Page {
           Rectangle {
             width: parent.width
             height: _.colSpacing
-            color: "#ffffff"
+            color: Theme.backgroundColor
           }
 
           Rectangle {

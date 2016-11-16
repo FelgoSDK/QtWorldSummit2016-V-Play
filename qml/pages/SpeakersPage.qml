@@ -6,12 +6,14 @@ ListPage {
   id: speakersPage
 
   property var speakersModel: DataModel.speakers !== undefined ? DataModel.speakers : {}
-  property var sectionSelectModel: []
 
   title: "Speakers"
 
   model: prepareSpeakers(speakersModel)
   section.property: "firstLetter"
+  section.delegate: SimpleSection {
+    style.compactStyle: Theme.isIos
+  }
 
   delegate: SpeakerRow {
     speaker: modelData
@@ -24,10 +26,10 @@ ListPage {
     }
   }
 
-  SpeakerSectionSelect {
+  SectionSelect {
     id: sectionSelect
     anchors.right: parent.right
-    sectionModel: sectionSelectModel
+    target: speakersPage.listView
   }
 
   // prepareSpeakers - build speaker model for display
@@ -40,20 +42,6 @@ ListPage {
       model.push(speaker)
     }
     model.sort(compareLastName);
-
-    // build model for section selection
-    var sectionModel = []
-    for(var j in model) {
-      var speakerIDSorted = Object.keys(model)[j];
-      var speakerSorted = model[parseInt(speakerIDSorted)]
-      var firstLetter = speakerSorted["firstLetter"]
-
-      if(!(firstLetter in sectionModel)) {
-        sectionModel[firstLetter] = j
-      }
-    }
-
-    sectionSelectModel = sectionModel
     return model
   }
 

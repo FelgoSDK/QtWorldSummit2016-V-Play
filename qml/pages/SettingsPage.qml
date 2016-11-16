@@ -7,7 +7,7 @@ Page {
   title: "Settings"
   rightBarItem: ActivityIndicatorBarItem { opacity: DataModel.loading ? 1 : 0 }
 
-  Flickable {
+  AppFlickable {
     anchors.fill: parent
     anchors.centerIn: parent
     contentWidth: width
@@ -34,6 +34,49 @@ Page {
         enabled: DataModel.loaded
         onClicked: DataModel.clearCache()
         verticalMargin: 0
+      }
+
+      // separator
+      Item {
+        Layout.fillWidth: true
+        Layout.preferredHeight: parent.spacing * 2
+        Rectangle {
+          width: parent.width * 0.4
+          height: px(1)
+          color: Theme.tintColor
+          anchors.centerIn: parent
+        }
+      }
+
+      // enable / disable notifications
+      Row {
+        id: notificationRow
+        Layout.alignment: Qt.AlignHCenter
+        spacing: parent.spacing
+
+        AppText {
+          anchors.verticalCenter: parent.verticalCenter
+          text: "Session Reminder:"
+          wrapMode: Text.NoWrap
+        }
+
+        AppSwitch {
+          anchors.verticalCenter: parent.verticalCenter
+          checked: DataModel.notificationsEnabled
+          updateChecked: false
+          onToggled: DataModel.notificationsEnabled = !checked
+        } // AppSwitch
+      }
+
+      AppText {
+        Layout.preferredWidth: parent.width - 2 * dp(Theme.navigationBar.defaultBarItemPadding)
+        Layout.maximumWidth: parent.width - 2 * dp(Theme.navigationBar.defaultBarItemPadding)
+        Layout.alignment: Qt.AlignHCenter
+        text: "Sends a local push notification 10 minutes before a favorited session is starting."
+        color: Theme.secondaryTextColor
+        wrapMode: Text.WordWrap
+        horizontalAlignment: Text.AlignHCenter
+        font.pixelSize: sp(14)
       }
 
       // separator
@@ -222,6 +265,8 @@ Page {
               Theme.navigationBar.backgroundColor = "#080808"
               Theme.navigationBar.titleColor = Qt.binding(function() {return Theme.isIos ? "#fff" : Theme.isAndroid ? "#fff" : "#f8f8f8" })
               Theme.navigationBar.itemColor = Qt.binding(function() {return Theme.isIos ? Theme.tintColor : Theme.tintColor })
+
+              Theme.colors.statusBarStyle = Theme.colors.statusBarStyleWhite
             }
             else {
               // default setting
@@ -232,6 +277,8 @@ Page {
               Theme.navigationBar.backgroundColor = Qt.binding(function() { return Theme.isIos ? "#f8f8f8" : Theme.tintColor })
               Theme.navigationBar.titleColor = Qt.binding(function() {return Theme.isIos ? "#000" : Theme.isAndroid ? "#fff" : "#f8f8f8" })
               Theme.navigationBar.itemColor = Qt.binding(function() {return Theme.isIos ? Theme.tintColor : Theme.navigationBar.titleColor })
+
+              Theme.colors.statusBarStyle = Theme.colors.statusBarStyleBlack
             }
           }
         } // AppSwitch

@@ -6,7 +6,7 @@ Rectangle {
   id: trackRow
   height: col.height + dp(10) * 2
   width: parent ? parent.width : 0 // dp(25) is section selection width
-  color: "#ffffff"
+  color: Theme.listItem.backgroundColor
   property var track
   signal clicked
 

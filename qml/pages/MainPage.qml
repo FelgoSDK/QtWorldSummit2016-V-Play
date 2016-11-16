@@ -22,7 +22,7 @@ Page {
     }
   }
 
-  Flickable {
+  AppFlickable {
     anchors.fill: parent
     anchors.centerIn: parent
     contentWidth: width
@@ -31,7 +31,7 @@ Page {
     Rectangle {
       width: parent.width
       height: content.height + 3000
-      color: "#fff"
+      color: Theme.backgroundColor
     }
 
     // page content

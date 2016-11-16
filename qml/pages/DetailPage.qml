@@ -55,12 +55,10 @@ Page {
       z: 1
     }
 
-    Flickable {
+    AppFlickable {
       id: scroll
       anchors.fill: parent
       contentHeight: contentCol.height + 2 * contentCol.y
-      clip: true
-      flickableDirection: Flickable.VerticalFlick
 
       // particle effect
       Item {
@@ -165,71 +163,74 @@ Page {
           }
         }
 
-        Row {
-          width: parent.width - dp(Theme.navigationBar.defaultBarItemPadding) * 2
+        Column {
           anchors.horizontalCenter: parent.horizontalCenter
-          visible: item && item.persons ? true : false
-          spacing: dp(Theme.navigationBar.defaultBarItemPadding)
+          width: Math.min(parent.width, mainSpeakerRow + dp(50))
+          Row {
+            id: mainSpeakerRow
+            //width: parent.width - dp(Theme.navigationBar.defaultBarItemPadding) * 2
+            anchors.horizontalCenter: parent.horizontalCenter
+            visible: item && item.persons ? true : false
+            spacing: dp(Theme.navigationBar.defaultBarItemPadding)
 
-          // speaker image
-          SpeakerImage {
-            id: speakerImg
-            width:  _.speakerImgSize
-            height: width
-            anchors.verticalCenter: parent.verticalCenter
-            source: item && item.persons ? DataModel.speakers[item.persons[0].id].avatar : ""
-            onLoadingChanged: {
-              if(loading)
-                _.loadingCount++
+            // speaker image
+            SpeakerImage {
+              id: speakerImg
+              width:  _.speakerImgSize
+              height: width
+              anchors.verticalCenter: parent.verticalCenter
+              source: item && item.persons ? DataModel.speakers[item.persons[0].id].avatar : ""
+              onLoadingChanged: {
+                if(loading)
+                  _.loadingCount++
+                else
+                  _.loadingCount--
+              }
+              activatePictureViewer: true
+            }
+
+            // speaker name
+            AppText {
+              id: speakerTxt
+              width: _.speakerTxtWidth
+              anchors.verticalCenter: parent.verticalCenter
+              wrapMode: Text.WordWrap
+              text: item && item.persons ? item.persons[0]["full_public_name"] : ""
+              RippleMouseArea {
+                width: mainSpeakerRow.width
+                height: mainSpeakerRow.height
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                fixedPosition: true
+                centerAnimation: true
+                touchPoint: Qt.point(speakerImg.width * 0.5, height * 0.5)
+                onClicked: {
+                  detailPage.navigationStack.push(Qt.resolvedUrl("SpeakerDetailPage.qml"), { speakerID: item.persons[0].id })
+                }
+              }
+            }
+          }
+
+          Item {
+            width: parent.width
+            height: _.colSpacing
+          }
+
+          TalkRow {
+            talk: item
+            onFavoriteClicked: toggleFavorite()
+            onRoomClicked: detailPage.navigationStack.push(Qt.resolvedUrl("RoomPage.qml"), { room: item.room })
+            onTrackClicked: {
+              var obj = {}
+              obj[track] = 0
+              var model = DataModel.prepareTracks(obj)
+              console.debug(JSON.stringify(model))
+              if(Theme.isAndroid)
+                detailPage.navigationStack.push(Qt.resolvedUrl("TrackDetailPage.qml"), { track: model[0] })
               else
-                _.loadingCount--
+                detailPage.navigationStack.push(Qt.resolvedUrl("TrackDetailPage.qml"), { track: model[0] })
             }
-            activatePictureViewer: true
           }
-
-          // speaker name
-          AppText {
-            id: speakerTxt
-            width: _.speakerTxtWidth
-            anchors.verticalCenter: parent.verticalCenter
-            wrapMode: Text.WordWrap
-            text: item && item.persons ? item.persons[0]["full_public_name"] : ""
-          }
-        }
-
-        Item {
-          width: parent.width
-          height: _.colSpacing
-        }
-
-        TalkRow {
-          talk: item
-          onFavoriteClicked: toggleFavorite()
-          onRoomClicked: detailPage.navigationStack.push(Qt.resolvedUrl("RoomPage.qml"), { room: item.room })
-          onTrackClicked: console.debug("track clicked")
-
-          /*Rectangle {
-            width: dp(50)
-            height: width
-            radius: width/2
-            color: "#efefef"
-            anchors.bottom: parent.bottom
-            //anchors.bottomMargin: dp(Theme.navigationBar.defaultBarItemPadding)
-            anchors.right: parent.right
-            anchors.rightMargin: dp(Theme.navigationBar.defaultBarItemPadding)
-
-            Icon {
-              icon: IconType.mapmarker
-              size: dp(30)
-              anchors.centerIn: parent
-              color: Theme.tintColor
-            }
-            RippleMouseArea {
-              anchors.fill: parent
-              centerAnimation: true
-              onClicked: detailPage.navigationStack.push(Qt.resolvedUrl("RoomPage.qml"), { room: item.room })
-            }
-          }*/
         }
 
         // divider
@@ -292,7 +293,7 @@ Page {
         Rectangle {
           width: parent.width
           height: idNote.height
-          color: Theme.isIos ? Theme.secondaryBackgroundColor : "#fff"
+          color: Theme.isIos ? Theme.secondaryBackgroundColor : Theme.backgroundColor
 
           Column {
             id: idNote
@@ -301,7 +302,7 @@ Page {
             Rectangle {
               width: parent.width
               height: _.colSpacing
-              color: "#ffffff"
+              color: Theme.backgroundColor
             }
 
             Rectangle {

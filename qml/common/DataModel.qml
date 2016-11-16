@@ -15,6 +15,9 @@ Item {
   readonly property bool loading: _.loadingCount > 0
   readonly property bool loaded: !!schedule && !!speakers
 
+  property bool notificationsEnabled: true
+  onNotificationsEnabledChanged: storage.setValue("notificationsEnabled", notificationsEnabled)
+
   signal loadingFailed()
   signal favoriteAdded()
   signal favoriteRemoved()
@@ -26,8 +29,8 @@ Item {
     id: _
 
     // qtws 2016 api urls
-    property string qtwsApiScheduleUrl: "http://www.qtworldsummit.com/api/schedule/all/"
-    property string qtwsApiSpeakersUrl: "http://www.qtworldsummit.com/api/speakers/all/"
+    property string qtwsApiScheduleUrl: Qt.resolvedUrl("../../assets/data/schedule.json")
+    property string qtwsApiSpeakersUrl: Qt.resolvedUrl("../../assets/data/speakers.json")
 
     property int loadingCount: 0
 
@@ -185,6 +188,7 @@ Item {
       dataModel.tracks = storage.getValue("tracks")
       dataModel.favorites = storage.getValue("favorites")
       dataModel.talks = storage.getValue("talks")
+      dataModel.notificationsEnabled = storage.getValue("notificationsEnabled") !== undefined ? storage.getValue("notificationsEnabled") : true
     }
   }
 
@@ -197,6 +201,7 @@ Item {
     dataModel.tracks = undefined
     dataModel.favorites = favorites // keep favorites even when clearing cache
     dataModel.talks = undefined
+    dataModel.notificationsEnabled = true
   }
 
   // getAll - loads all data from Qt WS 2016 api
@@ -249,6 +254,12 @@ Item {
             talk.description.toLowerCase().indexOf(term) >= 0) {
           contains++
         }
+        for(var key2 in talk.persons) {
+          var speaker = talk.persons[key2]
+          if(speaker.full_public_name.toLowerCase().indexOf(term) >= 0) {
+            contains++
+          }
+        }
       }
 
       if(contains == query.length)
@@ -261,5 +272,73 @@ Item {
   // isVPlayTalk - checks whether a talk is by V-Play
   function isVPlayTalk(talk) {
     return talk.title.toLowerCase().indexOf("multiple platforms and best practices") > 0
+  }
+
+  // prepareTracks - prepare track data for display in TracksPage
+  function prepareTracks(tracks) {
+    if(!dataModel.talks)
+      return []
+
+    var model = []
+    for(var i in Object.keys(tracks)){
+      var track = Object.keys(tracks)[i];
+      var talks = []
+
+      for(var j in Object.keys(dataModel.talks)) {
+        var talkID = Object.keys(dataModel.talks)[j]
+        var talk = dataModel.talks[parseInt(talkID)]
+
+        if(talk !== undefined && talk.tracks.indexOf(track) > -1) {
+          talks.push(talk)
+        }
+      }
+      talks = prepareTrackTalks(talks)
+      model.push({"title" : track, "talks" : talks})
+    }
+    model.sort(compareTitle)
+
+    return model
+  }
+
+  // prepareTrackTalks - package talk data in array ready to be displayed by TimeTableDaySchedule item
+  function prepareTrackTalks(trackTalks) {
+    if(!trackTalks)
+      return []
+
+    var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+    // get events and prepare data for sorting and sections
+    for(var idx in trackTalks) {
+      var data = trackTalks[idx]
+
+      // prepare event date for sorting
+      var date = new Date(data.day)
+      data.dayTime = date.getTime()
+
+      // prepare event section
+      var weekday = isNaN(date.getTime()) ? "Unknown" : days[ date.getDay() ]
+      data.section = weekday + ", " + (data.start.substring(0, 2) + ":00")
+
+      trackTalks[idx] = data
+    }
+
+    // sort events
+    trackTalks = trackTalks.sort(function(a, b) {
+      if(a.dayTime == b.dayTime)
+        return (a.start > b.start) - (a.start < b.start)
+      else
+        return (a.dayTime > b.dayTime) - (a.dayTime < b.dayTime)
+    })
+
+    return trackTalks
+  }
+
+  // sort tracks by title
+  function compareTitle(a,b) {
+    if (a.title < b.title)
+      return -1;
+    if (a.title > b.title)
+      return 1;
+    return 0;
   }
 }

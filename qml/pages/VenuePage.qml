@@ -4,12 +4,10 @@ import QtQuick 2.0
 Page {
   title: "Venue"
 
-  Flickable {
+  AppFlickable {
     anchors.fill: parent
     contentWidth: parent.width
     contentHeight: contentCol.height
-    flickableDirection: Flickable.VerticalFlick
-    clip: true
 
     Column {
       id: contentCol
@@ -97,7 +95,19 @@ Page {
         width: parent.width
         height: dp(200)
         fillMode: AppImage.PreserveAspectCrop
-        source: "https://api.mapbox.com/v4/mapbox.streets/pin-l-building+008000(-122.4033242,37.8054474)/-122.4033242,37.8054474,15/"+width+"x"+height+".png?access_token=pk.eyJ1IjoiaDAwYnMiLCJhIjoiY2lvdmNsbDI3MDA2OXc5bHdxNWE5NGdtOCJ9.me4r_KETvbmcohxomTuhvQ" //"../../assets/venue.png"
+        visible: status === Image.Ready || status === Image.Loading
+        //source: "../../assets/venue.png"
+        property int imgWidth: Math.min(1000,Math.max(320,width))
+        property int imgHeight: Math.min(1000,Math.max(240,height))
+        source: "https://api.mapbox.com/v4/mapbox.streets/pin-l-building+008000(-122.4033242,37.8054474)/-122.4033242,37.8054474,15/"+imgWidth+"x"+imgHeight+".png?access_token=pk.eyJ1IjoiaDAwYnMiLCJhIjoiY2lvdmNsbDI3MDA2OXc5bHdxNWE5NGdtOCJ9.me4r_KETvbmcohxomTuhvQ"
+
+        // use map image from assets as a fallback in case MapBox image doesn't work
+        property string fallbackImageSource: "../../assets/venue.png"
+        onStatusChanged: {
+          if(status === Image.Error && source !== fallbackImageSource)
+            source = fallbackImageSource
+        }
+
         RippleMouseArea {
           anchors.fill: parent
           circularBackground: false
@@ -112,7 +122,8 @@ Page {
       }
 
       SimpleSection {
-        title: "Public Transport"
+        property string section: "Public Transport"
+        title: section
       }
 
       Column {
@@ -154,7 +165,8 @@ Page {
       }
 
       SimpleSection {
-        title: "Airports"
+        property string section: "Airports"
+        title: section
       }
 
       Column {
@@ -196,7 +208,8 @@ Page {
       }
 
       SimpleSection {
-        title: "Parking"
+        property string section: "Parking"
+        title: section
       }
 
       Column {
@@ -228,6 +241,40 @@ Page {
           width: parent.width
           height: 1
         }
+      }
+
+      Rectangle {
+        width: parent.width
+        color: Theme.listItem.dividerColor
+        height: px(1)
+        visible: Theme.isIos
+      }
+
+
+      SimpleSection {
+        property string section: ""
+        visible: Theme.isIos
+      }
+
+      Item {
+        width: parent.width
+        height: dp(Theme.navigationBar.defaultBarItemPadding)
+      }
+
+      AppText {
+        color: Theme.secondaryTextColor
+        font.italic: true
+        width: parent.width - dp(Theme.navigationBar.defaultBarItemPadding) * 2
+        anchors.horizontalCenter: parent.horizontalCenter
+        wrapMode: AppText.WordWrap
+        font.pixelSize: sp(11)
+        horizontalAlignment: AppText.AlignHCenter
+        text: "All prices as of October 14, 2016 - taken from http://www.qtworldsummit.com/venue/"
+      }
+
+      Item {
+        width: parent.width
+        height: dp(Theme.navigationBar.defaultBarItemPadding)
       }
     }
   }

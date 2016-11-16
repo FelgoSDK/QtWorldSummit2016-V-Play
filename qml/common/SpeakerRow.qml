@@ -6,7 +6,7 @@ Rectangle {
   id: speakerRow
   height: row.height + dp(10) * 2
   width: !parent ? 0 :(small ? parent.width - dp(25) : parent.width) // dp(25) is section selection width
-  color: "#ffffff"
+  color: Theme.listItem.backgroundColor
   property var speaker
   property bool small
   signal clicked

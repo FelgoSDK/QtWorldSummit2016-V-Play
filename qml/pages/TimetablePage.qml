@@ -23,7 +23,7 @@ Page {
   // tab bar
   AppTabBar {
     id: appTabBar
-    showIcon: true
+    showIcon: false
     visible: dataAvailable
     contentContainer: swipeView
 
@@ -32,14 +32,7 @@ Page {
       property var dummyData: [{ "day" : 0, "weekday" : "", "schedule": undefined }]
       model: dataAvailable ? daysModel : dummyData
       delegate: AppTabButton {
-        iconComponent: AppText {
-          anchors.centerIn: parent
           text: Theme.isAndroid ? modelData.weekday.substring(0, 3) : modelData.weekday
-          font.bold: Theme.tabBar.fontBold
-          font.capitalization: Theme.tabBar.fontCapitalization
-          font.pixelSize: Theme.isIos ? sp(12) : sp(Theme.tabBar.textSize)
-          color: Theme.isIos ? parent.selected ? "#fff" : Theme.tintColor : parent.selected ? Theme.tabBar.titleColor : Theme.tabBar.titleOffColor
-        }
       } // AppTabButton
 
     } // Repeater
@@ -81,6 +74,11 @@ Page {
     }
   }
 
+  FloatingActionButton {
+    icon: IconType.star
+    onClicked: navigation.currentIndex = 2
+  }
+
   // prepareDaysModel - package schedule data in array with conference days (for tabs)
   function prepareDaysModel(data) {
     if(!(data.conference && data.conference.days))
@@ -90,8 +88,8 @@ Page {
 
     var model = []
     for(var day in data.conference.days) {
-      var date = new Date(day)
-      var weekday = isNaN(date.getTime()) ? "Unknown" : days[ date.getDay() ]
+      var date = new Date(day+"T00:00.000Z")
+      var weekday = isNaN(date.getUTCDay()) ? "Unknown" : days[ date.getUTCDay() ]
       var schedule = data.conference.days[day]
       var dayModel = {
         day: day,

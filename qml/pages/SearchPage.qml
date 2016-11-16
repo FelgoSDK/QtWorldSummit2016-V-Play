@@ -40,11 +40,11 @@ Page {
       var data = events[idx]
       if(data !== undefined) {
         // prepare event date for sorting
-        var date = new Date(data.day)
+        var date = new Date(data.day+"T00:00.000Z")
         data.dayTime = date.getTime()
 
         // prepare event section
-        var weekday = isNaN(date.getTime()) ? "Unknown" : days[ date.getDay() ]
+        var weekday = isNaN(date.getUTCDay()) ? "Unknown" : days[ date.getUTCDay() ]
         data.section = weekday + ", " + (data.start.substring(0, 2) + ":00")
 
         events[idx] = data

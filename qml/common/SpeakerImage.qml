@@ -72,8 +72,8 @@ Rectangle {
   }
 
   // auto-reload image when device is online again
-//  Connections {
-//    target: webImg.img.status !== Image.Ready ? getApplication() : null
-//    onIsOnlineChanged: if(isOnline) webImg.reload()
-//  }
+  Connections {
+    target: webImg.img.status !== Image.Ready ? getApplication() : null
+    onIsOnlineChanged: if(isOnline) webImg.reload()
+  }
 }

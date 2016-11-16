@@ -6,7 +6,7 @@ Page {
   title: room
   property string room
 
-  Flickable {
+  AppFlickable {
     id: flick
     anchors.fill: parent
     contentWidth: roomPage.width
@@ -56,25 +56,4 @@ Page {
       }
     }
   }
-
-  /*Flickable {
-    anchors.fill: parent
-    contentWidth: planImage.width
-    contentHeight: planImage.height
-    clip: true
-    AppImage {
-      id: planImage
-      source: "../../assets/rooms/" + room.replace(" Room","") + ".png"
-      width: parent.width
-    }
-  }*/
-  /*PinchArea {
-    anchors.fill: parent
-    pinch.target: planImage
-    pinch.minimumRotation: 0//-360
-    pinch.maximumRotation: 0//360
-    pinch.minimumScale: parent.width / planImage.sourceSize.width
-    pinch.maximumScale: pinch.minimumScale * 4
-    pinch.dragAxis: Pinch.XAndYAxis
-  }*/
 }
