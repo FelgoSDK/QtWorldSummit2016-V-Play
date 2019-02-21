@@ -1,3 +1,5 @@
+# Note: This project is no longer compatible with the latest Felgo SDK. You can find the new version of this app here: https://github.com/FelgoSDK/Qt-World-Summit-Conference-App
+
 # allows to add DEPLOYMENTFOLDERS and links to the V-Play library and QtCreator auto-completion
 CONFIG += v-play
 

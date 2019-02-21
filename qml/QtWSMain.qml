@@ -3,6 +3,10 @@ import QtQuick 2.0
 import "pages"
 import "common"
 
+/*
+  Note: This project is no longer compatible with the latest Felgo SDK. You can find the new version of this app here: https://github.com/FelgoSDK/Qt-World-Summit-Conference-App
+ */
+
 App {
   id: app
   // add your license key with activated One Signal and Local Notifications plugins here

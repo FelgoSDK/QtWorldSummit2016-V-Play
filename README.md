@@ -2,7 +2,11 @@
 
 Description
 -----------
+
 This is the source code of the Qt World Summit 2016 conference app made with Felgo, which is available for free in all stores.
+
+Note: This project is no longer compatible with the latest Felgo SDK. You can find the new version of this app here: https://github.com/FelgoSDK/Qt-World-Summit-Conference-App
+
 
 For more information about creating Apps with Felgo, see here: https://felgo.com/apps/.
 
