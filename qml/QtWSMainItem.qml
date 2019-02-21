@@ -1,6 +1,5 @@
-import VPlayApps 1.0
+import Felgo 3.0
 import QtQuick 2.0
-import VPlay 2.0 // for game network
 import QtGraphicalEffects 1.0
 import "pages"
 import "common"

@@ -1,7 +1,6 @@
-import VPlayApps 1.0
+import Felgo 3.0
 import QtQuick 2.0
 import QtQuick.Layouts 1.1
-import VPlay 2.0 // for particle effects
 import "../common"
 
 Page {

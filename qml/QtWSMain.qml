@@ -1,7 +1,5 @@
-import VPlayApps 1.0
+import Felgo 3.0
 import QtQuick 2.0
-import VPlay 2.0 // for game network
-import VPlayPlugins 1.0
 import "pages"
 import "common"
 
@@ -81,7 +79,7 @@ App {
   }
 
   // game network
-  VPlayGameNetwork {
+  FelgoGameNetwork {
     id: gameNetwork
     gameId: 307
     secret: "qtws2016github"
@@ -108,7 +106,7 @@ App {
   }
 
   // multiplayer
-  VPlayMultiplayer {
+  FelgoMultiplayer {
     id: multiplayer
     gameNetworkItem: gameNetwork
     multiplayerView: multiplayerViewItem && multiplayerViewItem.mpView || null

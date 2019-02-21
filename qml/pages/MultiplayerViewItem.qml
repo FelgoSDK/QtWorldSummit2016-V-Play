@@ -1,6 +1,5 @@
-import VPlayApps 1.0
+import Felgo 3.0
 import QtQuick 2.0
-import VPlay 2.0 // for game network
 import "../common"
 
 Item {
@@ -13,7 +12,7 @@ Item {
   // make accessible for GameNetwork component
   property alias mpView: multiplayerView
 
-  VPlayMultiplayerView {
+  MultiplayerView {
     id: multiplayerView
     anchors.fill: parent //.gameWindowAnchorItem
 

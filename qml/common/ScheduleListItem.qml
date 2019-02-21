@@ -1,7 +1,6 @@
-import VPlayApps 1.0
+import Felgo 3.0
 import QtQuick 2.0
 import QtQuick.Layouts 1.1
-import VPlay 2.0 // for particle effects
 import "../common"
 
 Item {
@@ -82,7 +81,7 @@ Item {
     anchors.fill: parent
     clip: true
 
-    ParticleVPlay {
+    Particle {
       id: particleEffect
       fileName: "../../assets/particles/YellowLightrays.json"
       autoStart: true
